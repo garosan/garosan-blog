@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/posts";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
@@ -16,9 +18,21 @@ export default async function PostPage({
   const { data, content } = matter(fileContent);
 
   return (
-    <article className="prose mx-auto py-10">
+    <article className="prose prose-invert mx-auto py-10">
+      <p className="text-xs font-semibold tracking-wide uppercase text-brand mb-2">
+        {data.category}
+      </p>
       <h1>{data.title}</h1>
-      <p className="text-sm text-gray-500">{data.date}</p>
+      <p className="text-sm text-muted-foreground">
+        By {data.author ?? "Garo Sanchez"} — {formatDate(data.date)}
+      </p>
+      <div className="flex gap-2 mt-2 mb-6">
+        {(data.tags ?? []).map((tag: string) => (
+          <Badge key={tag} variant="outline">
+            {tag}
+          </Badge>
+        ))}
+      </div>
       <MDXRemote source={content} />
     </article>
   );

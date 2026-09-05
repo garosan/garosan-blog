@@ -8,8 +8,21 @@ export type PostMeta = {
   slug: string;
   title: string;
   date: string;
+  author: string;
   excerpt: string;
+  category: "AI Engineering" | "Software Engineering";
+  tags: string[];
+  featured: boolean;
+  coverImage: string;
 };
+
+export function formatDate(date: string): string {
+  return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
 
 export function getAllPosts(): PostMeta[] {
   const files = fs.readdirSync(postsDirectory);
@@ -28,7 +41,12 @@ export function getAllPosts(): PostMeta[] {
         slug,
         title: data.title,
         date: data.date,
+        author: data.author ?? "Garo Sanchez",
         excerpt: data.excerpt,
+        category: data.category,
+        tags: data.tags ?? [],
+        featured: data.featured ?? false,
+        coverImage: data.coverImage ?? "/images/placeholder.jpg",
       };
     })
     .sort((a, b) => (a.date < b.date ? 1 : -1));

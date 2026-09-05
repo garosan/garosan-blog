@@ -5,6 +5,14 @@ const withMDX = createMDX({});
 
 const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
+    ],
+  },
 };
 
 export default withMDX(nextConfig);
