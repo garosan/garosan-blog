@@ -7,7 +7,7 @@ import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import { Badge } from "@/components/ui/badge";
 import { Pre } from "@/components/mdx-pre";
-import { formatDate } from "@/lib/posts";
+import { Byline } from "@/components/byline";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
@@ -48,9 +48,12 @@ export default async function PostPage({
           {data.category}
         </p>
         <h1>{data.title}</h1>
-        <p className="text-sm text-muted-foreground">
-          By {data.author ?? "Garo Sanchez"} — {formatDate(data.date)}
-        </p>
+        <Byline
+          author={data.author ?? "Garo Sanchez"}
+          date={data.date}
+          avatarSize={24}
+          className="text-sm"
+        />
         <div className="flex gap-2 mt-2 mb-6">
           {(data.tags ?? []).map((tag: string) => (
             <Badge key={tag} variant="outline">

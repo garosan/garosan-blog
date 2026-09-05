@@ -27,6 +27,14 @@ export function getCategoryFromSlug(slug: string): Category | undefined {
   return CATEGORIES[slug];
 }
 
+export const AUTHOR_AVATARS: Record<string, string> = {
+  "Garo Sanchez": "/images/pp_monkey.png",
+};
+
+export function getAuthorAvatar(author: string): string | undefined {
+  return AUTHOR_AVATARS[author];
+}
+
 export function formatDate(date: string): string {
   return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
     month: "short",

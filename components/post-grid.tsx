@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { formatDate, type PostMeta } from "@/lib/posts";
+import { Byline } from "@/components/byline";
+import type { PostMeta } from "@/lib/posts";
 
 export function PostGrid({ posts }: { posts: PostMeta[] }) {
   return (
@@ -37,9 +38,12 @@ export function PostGrid({ posts }: { posts: PostMeta[] }) {
             <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
               {post.excerpt}
             </p>
-            <p className="text-xs text-muted-foreground">
-              By {post.author} — {formatDate(post.date)}
-            </p>
+            <Byline
+              author={post.author}
+              date={post.date}
+              showAvatar={false}
+              className="text-xs"
+            />
           </Link>
         );
       })}

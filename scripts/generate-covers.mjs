@@ -30,8 +30,7 @@ const MANIFEST_PATHNAME = "covers/manifest.json";
 const MAX_PER_BUILD = Number(process.env.MAX_COVER_GENERATIONS_PER_BUILD ?? 3);
 const MAX_TOTAL = Number(process.env.MAX_COVER_GENERATIONS_TOTAL ?? 200);
 
-const FALLBACK_IMAGE = (slug) =>
-  `https://picsum.photos/seed/${slug}/1200/800`;
+const FALLBACK_IMAGE = (slug) => `https://picsum.photos/seed/${slug}/1200/800`;
 
 function log(msg) {
   console.log(`[covers] ${msg}`);
@@ -78,9 +77,11 @@ function setCoverImageLine(raw, coverUrl) {
     ? block.replace(/^coverImage:.*$/m, value)
     : `${block}\n${value}`;
 
-  return raw.slice(0, frontmatterMatch.index) +
+  return (
+    raw.slice(0, frontmatterMatch.index) +
     `---\n${newBlock}\n---` +
-    raw.slice(frontmatterMatch.index + frontmatterMatch[0].length);
+    raw.slice(frontmatterMatch.index + frontmatterMatch[0].length)
+  );
 }
 
 function needsGeneration(coverImage) {
@@ -91,7 +92,6 @@ function needsGeneration(coverImage) {
 const COLOR_THEMES = [
   "hot pink and magenta as the dominant color, with subtle dark accents",
   "electric blue as the dominant color, with subtle dark accents",
-  "deep violet and purple as the dominant color, with subtle dark accents",
   "turquoise and teal as the dominant color, with subtle dark accents",
 ];
 
@@ -126,9 +126,7 @@ async function generateImage(openai, prompt) {
 }
 
 async function main() {
-  const files = fs
-    .readdirSync(POSTS_DIR)
-    .filter((f) => f.endsWith(".mdx"));
+  const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"));
 
   const posts = files.map((file) => {
     const slug = file.replace(/\.mdx$/, "");
@@ -148,11 +146,11 @@ async function main() {
   const manifest = await readManifest();
 
   const hasCreds = Boolean(
-    process.env.OPENAI_API_KEY && process.env.BLOB_READ_WRITE_TOKEN
+    process.env.OPENAI_API_KEY && process.env.BLOB_READ_WRITE_TOKEN,
   );
   if (!hasCreds) {
     warn(
-      "OPENAI_API_KEY or BLOB_READ_WRITE_TOKEN missing — using placeholder images for all pending posts."
+      "OPENAI_API_KEY or BLOB_READ_WRITE_TOKEN missing — using placeholder images for all pending posts.",
     );
   }
 
@@ -170,12 +168,12 @@ async function main() {
       coverUrl = FALLBACK_IMAGE(post.slug);
     } else if (manifest.total >= MAX_TOTAL) {
       warn(
-        `${post.slug}: lifetime cap of ${MAX_TOTAL} generated covers reached — using placeholder. Raise MAX_COVER_GENERATIONS_TOTAL to allow more.`
+        `${post.slug}: lifetime cap of ${MAX_TOTAL} generated covers reached — using placeholder. Raise MAX_COVER_GENERATIONS_TOTAL to allow more.`,
       );
       coverUrl = FALLBACK_IMAGE(post.slug);
     } else if (generatedThisBuild >= MAX_PER_BUILD) {
       log(
-        `${post.slug}: per-build cap of ${MAX_PER_BUILD} reached — will generate on a future build. Using placeholder for now.`
+        `${post.slug}: per-build cap of ${MAX_PER_BUILD} reached — will generate on a future build. Using placeholder for now.`,
       );
       coverUrl = FALLBACK_IMAGE(post.slug);
     } else {
@@ -208,7 +206,7 @@ async function main() {
           {
             access: "public",
             contentType: "image/png",
-          }
+          },
         );
         coverUrl = blob.url;
         generatedThisBuild += 1;
@@ -220,20 +218,26 @@ async function main() {
         };
         log(`${post.slug}: generated and uploaded (${blob.url}).`);
       } catch (err) {
-        warn(`${post.slug}: generation failed (${err.message}), using placeholder.`);
+        warn(
+          `${post.slug}: generation failed (${err.message}), using placeholder.`,
+        );
         coverUrl = FALLBACK_IMAGE(post.slug);
       }
     }
 
     if (post.data.coverImage !== coverUrl) {
-      fs.writeFileSync(post.filePath, setCoverImageLine(post.raw, coverUrl), "utf8");
+      fs.writeFileSync(
+        post.filePath,
+        setCoverImageLine(post.raw, coverUrl),
+        "utf8",
+      );
     }
   }
 
   if (generatedThisBuild > 0) {
     await writeManifest(manifest);
     log(
-      `done: generated ${generatedThisBuild} new cover(s), lifetime total is now ${manifest.total}/${MAX_TOTAL}.`
+      `done: generated ${generatedThisBuild} new cover(s), lifetime total is now ${manifest.total}/${MAX_TOTAL}.`,
     );
   } else {
     log("done: no new images generated this build.");
@@ -241,5 +245,7 @@ async function main() {
 }
 
 main().catch((err) => {
-  warn(`unexpected failure, continuing build with existing covers: ${err.message}`);
+  warn(
+    `unexpected failure, continuing build with existing covers: ${err.message}`,
+  );
 });

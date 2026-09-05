@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { PostGrid } from "@/components/post-grid";
-import { getAllPosts, formatDate } from "@/lib/posts";
+import { Byline } from "@/components/byline";
+import { getAllPosts } from "@/lib/posts";
 
 export default function Home() {
   const posts = getAllPosts();
@@ -34,9 +35,12 @@ export default function Home() {
           <p className="text-base text-muted-foreground mt-3">
             {hero.excerpt}
           </p>
-          <p className="text-sm text-muted-foreground mt-3">
-            By {hero.author} — {formatDate(hero.date)}
-          </p>
+          <Byline
+            author={hero.author}
+            date={hero.date}
+            showAvatar={false}
+            className="text-sm mt-3"
+          />
         </Link>
 
         {/* Middle column */}
@@ -62,9 +66,12 @@ export default function Home() {
               <h3 className="text-lg font-bold leading-snug text-foreground group-hover:underline">
                 {post.title}
               </h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                By {post.author} — {formatDate(post.date)}
-              </p>
+              <Byline
+                author={post.author}
+                date={post.date}
+                showAvatar={false}
+                className="text-sm mt-2"
+              />
             </Link>
           ))}
         </div>
@@ -94,9 +101,12 @@ export default function Home() {
                   <p className="text-sm font-bold leading-snug text-foreground group-hover:underline">
                     {post.title}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1.5">
-                    By {post.author} — {formatDate(post.date)}
-                  </p>
+                  <Byline
+                    author={post.author}
+                    date={post.date}
+                    showAvatar={false}
+                    className="text-xs mt-1.5"
+                  />
                 </div>
               </Link>
             ))}
