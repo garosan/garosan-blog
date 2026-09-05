@@ -4,17 +4,28 @@ import matter from "gray-matter";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
+export type Category = "AI Engineering" | "Software Engineering";
+
 export type PostMeta = {
   slug: string;
   title: string;
   date: string;
   author: string;
   excerpt: string;
-  category: "AI Engineering" | "Software Engineering";
+  category: Category;
   tags: string[];
   featured: boolean;
   coverImage: string;
 };
+
+export const CATEGORIES: Record<string, Category> = {
+  "ai-engineering": "AI Engineering",
+  "software-engineering": "Software Engineering",
+};
+
+export function getCategoryFromSlug(slug: string): Category | undefined {
+  return CATEGORIES[slug];
+}
 
 export function formatDate(date: string): string {
   return new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {

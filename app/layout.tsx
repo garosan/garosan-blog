@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 };
 
 const NAV_LINKS = [
-  { label: "AI Engineering", href: "/categoria/ai-engineering" },
-  { label: "Software Engineering", href: "/categoria/software-engineering" },
+  { label: "AI Engineering", href: "/category/ai-engineering" },
+  { label: "Software Engineering", href: "/category/software-engineering" },
   { label: "About", href: "/about" },
 ];
 
