@@ -20,6 +20,29 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Writing a new post
+
+Posts live in `content/posts/*.mdx`. To get an AI-generated cover image, set in the frontmatter:
+
+```yaml
+coverImage: "generate"
+```
+
+`npm run dev` automatically runs `scripts/generate-covers.mjs` first (via the `predev` script), which replaces `"generate"` with a real Vercel Blob URL and rewrites the `.mdx` file on disk. This also happens automatically during `npm run build` (including on Vercel), but **that rewrite only happens in that build's own checkout — it never gets pushed back to git**.
+
+**After running `npm run dev` (or after a Vercel deploy) with a new post, remember to:**
+
+1. Check `git status` / `git diff` for the `.mdx` file — the `coverImage` field should now be a real URL, not `"generate"`.
+2. Commit and push that change, so local and the repo stay in sync and you don't see `Failed to construct 'URL': Invalid URL` next time you pull and run `npm run dev` fresh.
+
+If you ever need to force-regenerate a cover (e.g. you didn't like the result), run:
+
+```bash
+npm run covers:reset -- <post-slug>
+```
+
+then run `npm run dev` (or `npm run build`) again to regenerate it.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -196,16 +196,17 @@ async function main() {
           .digest("hex")
           .slice(0, 12);
         const imageBuffer = await generateImage(openai, prompt);
-        // addRandomSuffix (default true) guarantees a brand-new URL on
-        // every call, even if regenerating a post with identical content —
-        // this is what actually avoids stale-cache collisions, not the
-        // promptHash alone.
+        // addRandomSuffix guarantees a brand-new URL on every call, even if
+        // regenerating a post with identical title/excerpt (same promptHash)
+        // — the SDK's actual default is false, so without this the upload
+        // collides with any earlier blob at the same deterministic path.
         const blob = await put(
           `covers/${post.slug}-${promptHash}.png`,
           imageBuffer,
           {
             access: "public",
             contentType: "image/png",
+            addRandomSuffix: true,
           },
         );
         coverUrl = blob.url;

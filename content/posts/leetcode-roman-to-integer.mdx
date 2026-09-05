@@ -1,0 +1,96 @@
+---
+title: "Leetcode Roman to Integer"
+date: "2026-02-02"
+author: "Garo Sanchez"
+excerpt: "Resolviendo Roman to Integer de Leetcode"
+category: "Software Engineering"
+tags: ["leetcode", "dsa"]
+featured: false
+coverImage: "https://w5cmrrbdhvcqvozh.public.blob.vercel-storage.com/covers/leetcode-roman-to-integer-f8262d5c2da4-oqvFaR5uuWuoPXvuZZBXuv3fVOixh4.png"
+---
+
+Vamos con otro clásico de leetcode easy: Roman to Integer
+
+Puedes intentarlo y ver detalles [aquí](https://leetcode.com/problems/roman-to-integer/).
+
+## Descripción del problema
+
+Los números romanos se representan con siete símbolos distintos: `I`, `V`, `X`, `L`, `C`, `D` y `M`:
+
+```javascript
+const map = {
+  I: 1,
+  V: 5,
+  X: 10,
+  L: 50,
+  C: 100,
+  D: 500,
+  M: 1000,
+};
+```
+
+Dado un número romano, tienes que convertirlo a integer.
+
+Normalmente los símbolos se suman de izquierda a derecha (por ejemplo `VIII` es 5 + 1 + 1 + 1 = 8), pero hay un caso especial: cuando un símbolo más pequeño aparece **antes** de uno más grande, se resta en vez de sumarse. Por ejemplo `IV` no es 1 + 5 = 6, es 5 - 1 = 4.
+
+## Código Inicial
+
+```javascript
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var romanToInt = function (s) {};
+```
+
+## Approach: comparar cada símbolo con el siguiente
+
+La idea es recorrer el string una sola vez, y en cada posición comparar el valor del símbolo actual contra el valor del símbolo que le sigue.
+
+- Si el valor actual es **menor** que el siguiente, ese símbolo se **resta** (es justo el caso `IV`, `IX`, etc.).
+- Si no, se **suma** normalmente.
+
+La lógica:
+
+1. Creo un objeto que mapea cada símbolo romano a su valor entero.
+2. Recorro el string una sola vez.
+3. Por cada posición `i`, obtengo el valor del símbolo actual (`number`) y el del siguiente (`nextNumber`).
+4. Si existe un siguiente símbolo y su valor es mayor al actual, resto el valor actual.
+5. Si no, sumo el valor actual.
+6. Regreso la suma acumulada al terminar el recorrido.
+
+## Solución en JavaScript
+
+```javascript
+var romanToInt = function (s) {
+  const map = {
+    I: 1,
+    V: 5,
+    X: 10,
+    L: 50,
+    C: 100,
+    D: 500,
+    M: 1000,
+  };
+
+  let sum = 0;
+  for (let i = 0; i < s.length; i++) {
+    let number = map[s[i]];
+    let nextNumber = map[s[i + 1]];
+    if (nextNumber && nextNumber > number) {
+      sum -= number;
+    } else {
+      sum += number;
+    }
+  }
+  return sum;
+};
+```
+
+Un detalle importante en el `if`: escribí `nextNumber && nextNumber > number`, no solo `nextNumber > number`. Esto es porque cuando `i` llega al último carácter del string, `s[i + 1]` es `undefined`, y por lo tanto `nextNumber` también es `undefined`. Si comparara directamente `undefined > number`, JavaScript evalúa eso como `false`, así que técnicamente "funcionaría" igual... pero depender de ese comportamiento implícito de JS es frágil y confuso de leer. Agregar `nextNumber &&` primero hace explícito lo que en realidad estoy validando: "¿existe un siguiente símbolo? si no existe, ni siquiera intentes comparar, simplemente suma."
+
+Esta versión corre en **O(n)** de tiempo (un solo recorrido) y **O(1)** de espacio, ya que el objeto `map` tiene un tamaño fijo de 7 entradas sin importar qué tan largo sea `s`.
+
+## Conclusión
+
+Roman to Integer es un buen ejemplo de replantear la regla de un problema en vez de agregar una estructura de datos auxiliar: comparando cada elemento contra su vecino en una sola pasada, el caso de restar se resuelve sin necesitar tratarlo aparte. Y nada, solo es cuestión de disciplina y práctica, y si nos atoramos, preguntarle a nuestra IA favorita y seguir practicando. Seguimos adelante.
