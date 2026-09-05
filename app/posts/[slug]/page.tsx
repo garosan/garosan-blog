@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
 import { Badge } from "@/components/ui/badge";
 import { Pre } from "@/components/mdx-pre";
@@ -10,7 +11,7 @@ import { formatDate } from "@/lib/posts";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
 
-const mdxOptions = {
+const mdxOptions: NonNullable<MDXRemoteProps["options"]> = {
   mdxOptions: {
     rehypePlugins: [
       [
