@@ -8,7 +8,8 @@
     "build": "node --env-file-if-exists=.env.local scripts/generate-covers.mjs && next build",
     "start": "next start",
     "lint": "eslint",
-    "covers:reset": "node scripts/reset-cover.mjs"
+    "covers:reset": "node --env-file-if-exists=.env.local scripts/reset-cover.mjs",
+    "image:upload": "node --env-file-if-exists=.env.local scripts/upload-image.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

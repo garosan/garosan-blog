@@ -1,0 +1,92 @@
+---
+title: "IA en producción, Hello World!"
+date: "2026-09-05"
+author: "Garo Sanchez"
+excerpt: "Arrancamos a desplegar soluciones de IA a escala profesionalmente"
+category: "AI Engineering"
+tags: ["ai-for-production", "vercel", "fastapi"]
+featured: true
+coverImage: "https://w5cmrrbdhvcqvozh.public.blob.vercel-storage.com/covers/ai-for-production-part-01-df9dc667ff59-C8ZGSdiJJNeOtm8xbjYMenJh3xLJD6.png"
+---
+
+Más o menos a finales de 2025, principios de 2026 decidí que quería aprender lo más importante de IA de manera bastante práctica, me puse a buscar en Youtube, Udemy, Coursera, etc. y así fue como di con los cursos de Ed Donner. Inmediatamente me quedé asombrado por la facilidad con la que explica temas tan complicados y el alcance de sus cursos: Puedes tomarlos incluso si no sabes programar y terminar haciendo demos de correr IA local, fine-tuning, RAG usando AWS Vector Stores y demás cosas muy interesantes.
+
+Esta serie de posts está basada en mis notas de su curso **AI Engineer Production Track: Deploy LLMs & Agents at Scale** que recomiendo muchísimo adquirir. [Link aquí](https://www.udemy.com/course/generative-and-agentic-ai-in-production/). Mis notas incluyen los tweaks que le hice a los proyectos, rabbitholes de mi interés y otras curiosidades que me encontré en el camino.
+
+❗ Disclaimer: Esto no es un tutorial, es una reseña de lo que aprendí construyendo basándome en estos cursos.
+
+## Primer ejercicio: Gratificación instantánea
+
+A Ed siempre le gusta empezar sus cursos con algún ejercicio sencillo que nos permita obtener alguna gratificación instantánea. En este caso, se trata de hacer el despliegue más sencillo a producción, simplemente una API que nos devuelva un mensaje.
+
+El primer paso es crearse una cuenta en Vercel, yo ya la tengo por supuesto. El paso 2 es instalar Cursor, pero por lo pronto yo me apego a mis viejos hábitos y sigo usando VS Code. Si alguien tiene curiosidad, no me complico mucho con mi setup actual, uso Ubuntu sobre WSL en una máquina Windows.
+
+Después solo vamos a nuestra carpeta de proyectos, por ejemplo `projects/hello-world-production` y adentro de esta carpeta vamos a crear `hello.py` con el siguiente contenido:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def instant():
+    return "Hello there! I'm live from production!"
+```
+
+Yo he usado TypeScript la mayor parte de mi vida así que es curioso y refrescante usar una tecnología nueva para mí como FastAPI. Creo que el archivo es bastante sencillo que no hace falta mucha explicación: Al requerirse el endpoint `/`, se ejecuta la función `instant` que retorna el mensaje del código. Simple.
+
+Luego tenemos que crear un archivo `requirements.txt` con lo siguiente.
+
+```
+fastapi
+uvicorn
+```
+
+Este archivo funciona como las dependencias de un `package.json`.
+
+- `FastAPI` es el framework web de Python equivalente a Express en Node. Dato curioso: Fue creado por el colombiano [Sebastián Ramírez](https://x.com/tiangolo) que es un crack.
+- `uvicorn` es un paquete aparte. Es el servidor que escucha las conexiones HTTP y ejecuta la app, viene a ser como la parte del `app.listen()` en el universo de Express.
+
+Cuando queremos desplegar a Vercel con una configuración como ésta, necesitamos un archivo `vercel.json` con estos contenidos:
+
+```json
+{
+  "builds": [
+    {
+      "src": "hello.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "hello.py"
+    }
+  ]
+}
+```
+
+Ya creado el archivo, la guía nos dice que instalemos Node. Obviamente yo ya lo tengo y solo verificamos:
+
+```bash
+node --version
+npm --version
+```
+
+Ahora que ya tenemos nuestros 3 archivos: `instant.py, requirements.txt, vercel.json` y Node instalado, tenemos que instalar el CLI de Vercel (que yo ya tenía también): `npm install -g vercel`.
+
+Después de esto corremos `vercel login`.
+
+Y finalmente para desplegar: `vercel .`
+
+Vamos a crear un nuevo proyecto y seguir las instrucciones del wizard y listo!
+
+![Resultado en terminal al correr el CLI](https://w5cmrrbdhvcqvozh.public.blob.vercel-storage.com/posts/ai-for-production-part-01/cli-result-yxjTpRE8Au30UPzpj1CrVS9eCbJg2d.png)
+
+En cuestión de segundos tenemos nuestro primer despliegue a producción:
+
+![Deploy a producción en Vercel](https://w5cmrrbdhvcqvozh.public.blob.vercel-storage.com/posts/ai-for-production-part-01/deploy-to-prod-U1DRBAa0wDrBtH8IqhV1m9Kul7Tacr.png)
+
+## Conclusión
+
+Este fue un primer ejercicio para que si nunca has programado o desplegado a producción te des una idea de lo fácil que es empezar a usar estas herramientas y lo lejos que puedes llegar con las guías adecuadas, preguntándole a la IA, buscando y con mucha curiosidad. En adelante voy a poner más los resultados de lo que he estado logrando sin poner todo el código ni descripciones o imágenes de todos los pasos porque no acabaría nunca. Recomiendo muchísimo usar los cursos de Ed Donner como una guía muy bien estructurada de los temas que vale la pena aprender y aplicar tu metodología favorita para construir y aprender. Sigamos!
