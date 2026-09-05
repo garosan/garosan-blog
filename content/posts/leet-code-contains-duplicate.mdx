@@ -1,0 +1,88 @@
+---
+title: "Leetcode Contains Duplicate"
+date: "2026-08-01"
+author: "Garo Sanchez"
+excerpt: "Resolviendo Contains Duplicate de Leetcode"
+category: "Software Engineering"
+tags: ["leetcode", "dsa"]
+featured: false
+coverImage: "https://picsum.photos/seed/contains-duplicate/800/600"
+---
+
+Vamos a resolver otro problema básico de algoritmia y estructura de datos: Contains Duplicate
+
+Puedes encontrar y resolver el problema [aquí](https://leetcode.com/problems/contains-duplicate/description/).
+
+## Descripción del problema
+
+El problema es muy fácil de entender: te dan un array de integers llamado `nums`, y tienes que regresar `true` si algún valor aparece **al menos dos veces** en el array, y `false` si todos los elementos son distintos.
+
+## Código Inicial
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var containsDuplicate = function (nums) {};
+```
+
+## Approach simple
+
+Lo primero que se me ocurre es lo mismo que en Two Sum: comparar cada elemento contra todos los demás, y si encuentro dos que sean iguales, regreso `true`.
+
+```javascript
+var containsDuplicate = function (nums) {
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] === nums[j]) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+```
+
+Funciona, pero otra vez caemos en **O(n²)**, exactamente el mismo problema que tuvimos en Two Sum: por cada elemento recorremos el resto del array, y eso escala muy mal conforme el array crece. De hecho, si intentas este approach en Leetcode a veces algunos casos de prueba hacen timeout, por lo que nisiquiera se puede considerar una solución válida.
+
+## Approach óptimo: usando un Set
+
+Aquí la pregunta cambia de nuevo: en vez de "¿este número ya lo comparé contra todos los demás?", me pregunto "¿ya vi este número antes en algún punto?"
+
+Para responder eso rápido, un `Set` es ideal, porque a diferencia de un array, checar si un valor ya existe en un Set es **O(1)** en promedio, en vez de tener que recorrerlo entero.
+
+Trata de leer con detenimiento esta lógica, si la entiendes ya nunca más batallarás para resolver este problema:
+
+1. Recorro el array una sola vez.
+2. Por cada número, reviso si ya está en mi Set.
+3. Si ya está, encontré un duplicado, regreso `true`.
+4. Si no está, lo agrego al Set y sigo.
+5. Si termino de recorrer todo el array sin encontrar ninguno repetido, regreso `false`.
+
+## Solución en JavaScript
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var containsDuplicate = function (nums) {
+  const seen = new Set();
+
+  for (let i = 0; i < nums.length; i++) {
+    if (seen.has(nums[i])) {
+      return true;
+    }
+    seen.add(nums[i]);
+  }
+
+  return false;
+};
+```
+
+Esta versión corre en **O(n)** de tiempo y **O(n)** de espacio en el peor caso. A diferencia de Two Sum, aquí usamos un Set en vez de un Map porque no necesitamos guardar un índice, solo necesitamos saber "¿ya vi este valor sí o no?".
+
+## Conclusión
+
+Contains Duplicate es prácticamente el mismo patrón que Two Sum: cambiar un approach de fuerza bruta O(n²) por uno con una estructura de datos de búsqueda rápida (Set o Map) que nos baja a O(n), a cambio de usar más memoria. Tanto este problema como Two Sum generalmente se consideran ejercicios de _calentamiento_ pero siempre es bueno tomarlos como punto de partida en nuestro camino a dominar problemas de leetcode.
