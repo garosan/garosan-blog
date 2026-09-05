@@ -42,7 +42,7 @@ export default async function PostPage({
       >
         ← Back to home
       </Link>
-      <article className="prose prose-invert max-w-2xl prose-pre:bg-transparent prose-pre:p-0 prose-code:before:content-none prose-code:after:content-none">
+      <article className="post-article prose prose-invert max-w-2xl prose-pre:bg-transparent prose-pre:p-0 prose-code:before:content-none prose-code:after:content-none">
         <p className="text-xs font-semibold tracking-wide uppercase text-brand mb-2">
           {data.category}
         </p>
