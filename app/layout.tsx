@@ -62,6 +62,39 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </nav>
         </header>
         <div className="flex-1">{children}</div>
+        <footer className="border-t border-border">
+          <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              _Foundation/_Frontier
+            </span>
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
+              <a
+                href="https://x.com/garosan1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground"
+              >
+                X
+              </a>
+              <a
+                href="https://www.linkedin.com/in/garosan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-foreground"
+              >
+                YouTube
+              </a>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );

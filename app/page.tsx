@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { PostGrid } from "@/components/post-grid";
 import { getAllPosts, formatDate } from "@/lib/posts";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
   const featured = posts.filter((p) => p.featured).slice(0, 5);
   const [hero, ...rest] = posts;
   const middle = rest.slice(0, 2);
+  const latest = rest.slice(2);
 
   return (
     <main className="max-w-7xl mx-auto py-10 px-4">
@@ -101,6 +103,22 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Latest */}
+      {latest.length > 0 && (
+        <section className="mt-16">
+          <h4 className="text-xs font-semibold tracking-wide uppercase text-muted-foreground pb-3 border-b border-border mb-2">
+            Latest
+          </h4>
+          <PostGrid posts={latest} />
+          <Link
+            href="/posts"
+            className="inline-block text-lg font-bold text-foreground hover:text-brand mt-8"
+          >
+            See all →
+          </Link>
+        </section>
+      )}
     </main>
   );
 }
