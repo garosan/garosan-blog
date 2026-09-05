@@ -3,10 +3,26 @@ import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypePrettyCode from "rehype-pretty-code";
 import { Badge } from "@/components/ui/badge";
+import { Pre } from "@/components/mdx-pre";
 import { formatDate } from "@/lib/posts";
 
 const postsDirectory = path.join(process.cwd(), "content/posts");
+
+const mdxOptions = {
+  mdxOptions: {
+    rehypePlugins: [
+      [
+        rehypePrettyCode,
+        {
+          theme: "poimandres",
+          keepBackground: true,
+        },
+      ],
+    ],
+  },
+};
 
 export default async function PostPage({
   params,
@@ -26,7 +42,7 @@ export default async function PostPage({
       >
         ← Back to home
       </Link>
-      <article className="prose prose-invert max-w-2xl">
+      <article className="prose prose-invert max-w-2xl prose-pre:bg-transparent prose-pre:p-0 prose-code:before:content-none prose-code:after:content-none">
         <p className="text-xs font-semibold tracking-wide uppercase text-brand mb-2">
           {data.category}
         </p>
@@ -41,7 +57,11 @@ export default async function PostPage({
             </Badge>
           ))}
         </div>
-        <MDXRemote source={content} />
+        <MDXRemote
+          source={content}
+          options={mdxOptions}
+          components={{ pre: Pre }}
+        />
       </article>
     </main>
   );

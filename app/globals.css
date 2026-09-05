@@ -132,3 +132,36 @@
     @apply font-sans;
   }
 }
+
+figure[data-rehype-pretty-code-figure] pre {
+  padding: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+}
+
+figure[data-rehype-pretty-code-figure] code {
+  display: grid;
+  font-size: 0.875em;
+  counter-reset: line;
+}
+
+figure[data-rehype-pretty-code-figure] [data-line] {
+  padding: 0 1rem;
+  border-left: 2px solid transparent;
+}
+
+figure[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  background-color: color-mix(in oklch, var(--brand) 12%, transparent);
+  border-left-color: var(--brand);
+}
+
+code[data-line-numbers] > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.5rem;
+  margin-right: 1rem;
+  text-align: right;
+  color: var(--muted-foreground);
+}
