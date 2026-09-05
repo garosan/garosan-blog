@@ -1,0 +1,94 @@
+---
+title: "Leetcode Two Sum"
+date: "2026-09-12"
+author: "Garo Sanchez"
+excerpt: "Resolviendo Two Sum de Leetcode"
+category: "Software Engineering"
+tags: ["leetcode", "dsa"]
+featured: true
+coverImage: "https://picsum.photos/seed/rest-graphql/800/600"
+---
+
+Vamos a pensar cómo resolver uno de los problemas más básicos de algoritmia: Two Sum
+
+## Descripción del problema
+
+Puedes resolver el problema [aquí](https://leetcode.com/problems/two-sum/description/).
+
+La descripción es bastante sencilla: Te van a dar un array de integers llamado `nums` y un integer llamado `target`; tú tienes qué regresar los índices de los dos integers del array que sumados son igual al `target`.
+
+## Código Inicial
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function (nums, target) {};
+```
+
+## Approach simple
+
+Lo primero que se me ocurre es lo siguiente: si necesito encontrar dos números que sumados den `target`, puedo simplemente comparar cada número del array contra todos los demás, uno por uno, hasta encontrar el par que funcione.
+
+Esto se traduce en dos loops anidados: por cada elemento `i`, recorro el resto del array buscando un elemento `j` tal que `nums[i] + nums[j] === target`.
+
+```javascript
+var twoSum = function (nums, target) {
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] + nums[j] === target) {
+        return [i, j];
+      }
+    }
+  }
+};
+```
+
+Esto funciona y perfecto para un array pequeño, pero tiene un problema: la complejidad es **O(n²)**. Por cada elemento estoy recorriendo (casi) todo el array otra vez, así que si `nums` tiene 10,000 elementos, en el peor caso estoy haciendo cerca de 100 millones de comparaciones (10,000 \* 10,000).
+
+## Approach óptimo: usando un hash map
+
+La clave para mejorar esto es cambiar la pregunta que me hago. En vez de "¿qué par de números suma `target`?", me pregunto: "por cada número que voy viendo, ¿ya vi antes el número que le falta para llegar a `target`?"
+
+Esto es exactamente lo que un hash map (en JS, un `Map` o un objeto) resuelve bien: búsquedas en **O(1)** en promedio.
+
+La lógica queda así:
+
+1. Recorro el array una sola vez.
+2. Por cada número `nums[i]`, calculo su "complemento": `target - nums[i]`.
+3. Reviso si ese complemento ya está guardado en mi Map (es decir, si ya lo vi en una vuelta anterior).
+4. Si está, ya encontré mi par, regreso los índices.
+5. Si no está, guardo el número actual en el Map (junto con su índice) y sigo al siguiente.
+
+Con esto, en vez de comparar cada número contra todos los demás, solo hago una consulta rápida por cada número, recorriendo el array una única vez.
+
+## Solución en JavaScript
+
+```javascript
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function (nums, target) {
+  const seen = new Map();
+
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+
+    if (seen.has(complement)) {
+      return [seen.get(complement), i];
+    }
+
+    seen.set(nums[i], i);
+  }
+};
+```
+
+Esta versión corre en **O(n)** de tiempo, porque solo recorremos el array una vez, y **O(n)** de espacio, porque en el peor caso guardamos todos los elementos en el Map antes de encontrar el par.
+
+## Conclusión
+
+Two Sum es de esos problemas que parecen triviales pero que enseñan bien un patrón que se repite muchísimo en algoritmia: cambiar un approach de fuerza bruta O(n²) por uno con hash map O(n), sacrificando algo de espacio en memoria a cambio de velocidad. Ese patrón de trade-off de tiempo vs espacio nos va a servir muchísimo así que vale la pena grabárnoslo y pues nada, a seguir practicando!
