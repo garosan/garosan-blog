@@ -1,0 +1,74 @@
+---
+title: "Leetcode Palindrome Number"
+date: "2026-09-05"
+author: "Garo Sanchez"
+excerpt: "Resolviendo Palindrome Number de Leetcode"
+category: "Software Engineering"
+tags: ["leetcode", "dsa"]
+featured: false
+coverImage: "generate"
+---
+
+Seguimos con los leetcode easys, hoy presentamos: Palindrome Number.
+
+Puedes encontrar el problema [acá](https://leetcode.com/problems/palindrome-number/).
+
+## Descripción del problema
+
+La descripción es sencilla: te dan un integer `x`, y tienes que regresar `true` si `x` es un palíndromo (es decir, se lee igual de izquierda a derecha que de derecha a izquierda), y `false` si no lo es.
+
+## Código Inicial
+
+```javascript
+/**
+ * @param {number} x
+ * @return {boolean}
+ */
+var isPalindrome = function (x) {};
+```
+
+## Mi approach
+
+Siempre hay qué leer bien las instrucciones del problema, por ejemplo, aquí nos dicen que puede haber números negativos como `-10`, que al voltearlo sería `01-`, en conclusión: antes que cualquier cosa, chequemos si `x < 0`, si es así, de una regresamos `false`.
+
+```javascript
+var isPalindrome = function (x) {
+  if (x < 0) return false;
+};
+```
+
+Ahora la pregunta es: en vez de "¿construyo el string invertido completo y comparo?", me pregunto "¿puedo comparar directamente el primer y el último carácter, ir cerrando hacia el centro, y detenerme en cuanto encuentre una diferencia?"
+
+Esto es la técnica de **dos punteros**: un puntero arranca en el inicio del string (`i = 0`) y otro arranca en el final (`str.length - 1 - i`), y se van acercando al centro comparando carácter por carácter. En cuanto encuentran un par que no coincide, ya sabemos que no es palíndromo y podemos regresar `false` de inmediato, sin seguir comparando el resto.
+
+La lógica:
+
+1. Si `x` es negativo, regreso `false` de inmediato (un número negativo nunca es palíndromo por el signo).
+2. Convierto `x` a string.
+3. Recorro solo la mitad del string (no tiene sentido comparar más allá del centro, ya estaríamos comparando los mismos pares al revés).
+4. En cada vuelta comparo el carácter en la posición `i` contra el carácter en la posición `length - 1 - i`.
+5. Si en algún punto no coinciden, regreso `false` inmediatamente.
+6. Si termino de recorrer la mitad sin encontrar ninguna diferencia, regreso `true`.
+
+## Solución en JavaScript
+
+```javascript
+var isPalindrome = function (x) {
+  if (x < 0) {
+    return false;
+  }
+  const str = String(x);
+  for (let i = 0; i < Math.floor(str.length / 2); i++) {
+    if (str[i] !== str[str.length - 1 - i]) {
+      return false;
+    }
+  }
+  return true;
+};
+```
+
+Esta versión es `O(n)` de tiempo en el peor caso (un número que sí es palíndromo, donde tienes que revisar hasta el centro), pero a diferencia del approach de construir el número al revés y comparar, puede terminar mucho antes si el número no es palíndromo desde los primeros caracteres, y nunca construye un string extra invertido, solo recorre y compara sobre el mismo string original.
+
+## Conclusión
+
+_Palindrome Number_ introduce un patrón distinto a los dos anteriores que hemos visto (_Two Sum_ y _Contains Duplicate_): en lugar de resolver el problema guardando cosas en una estructura de datos (`Map` o `Set`), aquí la mejora viene de cambiar **cómo recorremos** los datos, usando dos punteros que se acercan desde los extremos hacia el centro en vez de transformar todo el dato de una sola vez. Este patrón de dos punteros se repite mucho en problemas de strings y arrays (Valid Palindrome, Two Sum II, 3Sum), así que es bueno que lo vayamos interiorizando y practicando. Hasta la próxima!
